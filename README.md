@@ -34,7 +34,7 @@ The application uses a `config.ini` file (created automatically if missing, usin
 
 ## Default Hotkeys
 
-*   **Toggle Overlay:** `Ctrl_R + Alt + T` (Right Ctrl)
+*   **Toggle Overlay:** `Ctrl_R + Alt + T`
 *   **Increase Opacity:** `Ctrl + Alt + UpArrow`
 *   **Decrease Opacity:** `Ctrl + Alt + DownArrow`
 *   **Next Texture:** `Ctrl + Alt + RightArrow`
