@@ -356,8 +356,8 @@ def main():
 
     # Connect signals *after* window is created
     signal_bridge.toggleSignal.connect(window.toggle_visibility)
-    signal_bridge.increaseOpacitySignal.connect(lambda: window.change_opacity(0.1))
-    signal_bridge.decreaseOpacitySignal.connect(lambda: window.change_opacity(-0.1))
+    signal_bridge.increaseOpacitySignal.connect(lambda: window.change_opacity(0.05))
+    signal_bridge.decreaseOpacitySignal.connect(lambda: window.change_opacity(-0.05))
     signal_bridge.nextTextureSignal.connect(window.next_texture)
     signal_bridge.previousTextureSignal.connect(window.previous_texture)
 
@@ -379,9 +379,9 @@ def main():
     toggle_action = menu.addAction(f"Toggle Overlay ({config_hotkeys['toggle']})")
     toggle_action.triggered.connect(window.toggle_visibility)
     increase_opacity_action = menu.addAction(f"Increase Opacity ({config_hotkeys['increase_opacity']})")
-    increase_opacity_action.triggered.connect(lambda: window.change_opacity(0.1))
+    increase_opacity_action.triggered.connect(lambda: window.change_opacity(0.05))
     decrease_opacity_action = menu.addAction(f"Decrease Opacity ({config_hotkeys['decrease_opacity']})")
-    decrease_opacity_action.triggered.connect(lambda: window.change_opacity(-0.1))
+    decrease_opacity_action.triggered.connect(lambda: window.change_opacity(-0.05))
     next_texture_action = menu.addAction(f"Next Texture ({config_hotkeys['next_texture']})")
     next_texture_action.triggered.connect(window.next_texture)
     prev_texture_action = menu.addAction(f"Previous Texture ({config_hotkeys['previous_texture']})")
