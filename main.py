@@ -288,7 +288,7 @@ class MainWindow(QMainWindow):
             print("Overlay: OFF")
             self.osd_popup.show_message("Overlay: OFF") # Also show OSD
 
-    def change_opacity(self, delta=0.1):
+    def change_opacity(self, delta=0.05):
         print(f"Changing opacity by: {delta}")
         # Use round to avoid floating point issues when comparing/stepping
         current_opacity = round(self.central_widget.opacity, 1)
