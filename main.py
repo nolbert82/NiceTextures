@@ -28,7 +28,8 @@ DEFAULT_HOTKEYS = {
 DEFAULT_STARTUP = {
     'opacity': 0.5,
     'texture': None, # None means load the first available
-    'enabled': False # Default to not visible on startup
+    'enabled': False, # Default to not visible on startup
+    'opacity_step': 0.05 # Default step for opacity changes
 }
 
 # --- Resource Handling (for PyInstaller) ---
@@ -64,6 +65,17 @@ def load_config():
                 print(f"Warning: Invalid InitialOpacity value in {CONFIG_FILE}. Using default.")
                 startup['opacity'] = DEFAULT_STARTUP['opacity']
             startup['texture'] = config['Startup'].get('InitialTexture', DEFAULT_STARTUP['texture']) or None # Ensure empty string becomes None
+            try:
+                step = config['Startup'].getfloat('OpacityStep', DEFAULT_STARTUP['opacity_step'])
+                # Validate step value
+                if 0.01 <= step <= 0.5:
+                    startup['opacity_step'] = step
+                else:
+                    print(f"Warning: OpacityStep value {step} in {CONFIG_FILE} is outside the allowed range (0.01-0.5). Using default.")
+                    startup['opacity_step'] = DEFAULT_STARTUP['opacity_step']
+            except ValueError:
+                print(f"Warning: Invalid OpacityStep value in {CONFIG_FILE}. Using default.")
+                startup['opacity_step'] = DEFAULT_STARTUP['opacity_step']
             try:
                 startup['enabled'] = config['Startup'].getboolean('OverlayEnabled', DEFAULT_STARTUP['enabled'])
             except ValueError:
@@ -246,6 +258,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.overlay_visible = startup_config.get('enabled', True) # Get initial state from config
         self.startup_config = startup_config
+        self.opacity_step = startup_config.get('opacity_step', 0.05) # Store configured step
         self.initUI()
 
     def initUI(self):
@@ -290,12 +303,12 @@ class MainWindow(QMainWindow):
 
     def change_opacity(self, delta=0.05):
         print(f"Changing opacity by: {delta}")
-        # Use round to avoid floating point issues when comparing/stepping
-        current_opacity = round(self.central_widget.opacity, 1)
+        # Use 2 decimal places for finer control with smaller steps
+        current_opacity = round(self.central_widget.opacity, 2)
         new_opacity = current_opacity + delta
 
         # Clamp opacity between 0.0 and 1.0 (Allowing 0% opacity)
-        new_opacity_clamped = max(0.0, min(1.0, round(new_opacity, 1)))
+        new_opacity_clamped = max(0.0, min(1.0, round(new_opacity, 2)))
 
         # Prevent changing if already at min/max in the direction of delta
         if (delta > 0 and current_opacity >= 1.0) or (delta < 0 and current_opacity <= 0.0):
@@ -356,8 +369,8 @@ def main():
 
     # Connect signals *after* window is created
     signal_bridge.toggleSignal.connect(window.toggle_visibility)
-    signal_bridge.increaseOpacitySignal.connect(lambda: window.change_opacity(0.05))
-    signal_bridge.decreaseOpacitySignal.connect(lambda: window.change_opacity(-0.05))
+    signal_bridge.increaseOpacitySignal.connect(lambda: window.change_opacity(window.opacity_step))
+    signal_bridge.decreaseOpacitySignal.connect(lambda: window.change_opacity(-window.opacity_step))
     signal_bridge.nextTextureSignal.connect(window.next_texture)
     signal_bridge.previousTextureSignal.connect(window.previous_texture)
 
@@ -379,9 +392,9 @@ def main():
     toggle_action = menu.addAction(f"Toggle Overlay ({config_hotkeys['toggle']})")
     toggle_action.triggered.connect(window.toggle_visibility)
     increase_opacity_action = menu.addAction(f"Increase Opacity ({config_hotkeys['increase_opacity']})")
-    increase_opacity_action.triggered.connect(lambda: window.change_opacity(0.05))
+    increase_opacity_action.triggered.connect(lambda: window.change_opacity(window.opacity_step))
     decrease_opacity_action = menu.addAction(f"Decrease Opacity ({config_hotkeys['decrease_opacity']})")
-    decrease_opacity_action.triggered.connect(lambda: window.change_opacity(-0.05))
+    decrease_opacity_action.triggered.connect(lambda: window.change_opacity(-window.opacity_step))
     next_texture_action = menu.addAction(f"Next Texture ({config_hotkeys['next_texture']})")
     next_texture_action.triggered.connect(window.next_texture)
     prev_texture_action = menu.addAction(f"Previous Texture ({config_hotkeys['previous_texture']})")
