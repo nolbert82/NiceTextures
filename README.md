@@ -53,10 +53,9 @@ The application uses a `config.ini` file (created automatically if missing, usin
 
 ## Building from Source
 
-1.  Install dependencies: `pip install -r requirements.txt`
-2.  Install PyInstaller: `pip install pyinstaller`
-3.  Run the build script: `build.bat`
-    *   The executable (`NiceTextures.exe`) will be created in the `dist` folder.
+1.  **Run Build Script:** Simply execute the `build.bat` script.
+    *   This script will automatically create a virtual environment (if needed), install the correct dependencies from `requirements.txt`, and then run PyInstaller.
+    *   The final executable (`NiceTextures.exe`) will be created in the `dist` folder.
 
 ## Dependencies
 

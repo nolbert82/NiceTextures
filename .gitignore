@@ -10,4 +10,7 @@ build/
 # Environment specific (optional)
 .env
 venv/
-*.env 
+*.env
+
+# Virtual environment created by build script
+.venv/ 
