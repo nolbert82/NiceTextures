@@ -26,7 +26,7 @@ DEFAULT_HOTKEYS = {
     'previous_texture': '<ctrl>+<alt>+<left>',
 }
 DEFAULT_STARTUP = {
-    'opacity': 0.5,
+    'opacity': 0.2,
     'texture': None, # None means load the first available
     'enabled': False, # Default to not visible on startup
     'opacity_step': 0.05 # Default step for opacity changes
