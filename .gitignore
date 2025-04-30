@@ -7,7 +7,7 @@ dist/
 build/
 *.spec
 
-# Environment specific (optional)
+# Environment specific
 .env
 venv/
 *.env
